@@ -21,6 +21,7 @@ export async function fetchRequest(event, { originReq }) {
   // )
 
   const originRes = await fetch(originReq, {
+    redirect: 'follow',
     cf: {
       polish: 'lossy',
       cacheEverything: true
