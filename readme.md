@@ -92,6 +92,7 @@ A few notes about the implementation:
 - Removed webpack dependency (Wrangler v3+ has built-in bundling)
 - Simplified wrangler.toml configuration
 - Fixed deployment issues with modern Node.js versions
+- Add custom headers support for image hosts (e.g., douban, unsplash)
 
 ## TODO
 

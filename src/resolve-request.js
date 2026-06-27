@@ -1,3 +1,5 @@
+import { defaultUserAgent, refererMap } from './config'
+
 const notionImagePrefix = 'https://www.notion.so/image/'
 
 /**
@@ -36,5 +38,27 @@ export async function resolveRequest(event, request) {
 
   const originReq = new Request(originUri, request)
 
-  return { originReq }
+  // Add custom headers only for valid URLs
+  let modifiedReq = originReq
+  try {
+    const originUrl = new URL(originUri)
+    const headers = new Headers(originReq.headers)
+
+    // Set User-Agent if not present
+    if (!headers.has('user-agent')) {
+      headers.set('user-agent', defaultUserAgent)
+    }
+
+    // Set Referer based on hostname
+    const referer = refererMap[originUrl.hostname]
+    if (referer && !headers.has('referer')) {
+      headers.set('referer', referer)
+    }
+
+    modifiedReq = new Request(originReq, { headers })
+  } catch (e) {
+    // If URL parsing fails, use original request
+  }
+
+  return { originReq: modifiedReq }
 }
