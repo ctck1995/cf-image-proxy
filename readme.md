@@ -18,7 +18,7 @@
 
 1. Create a new blank [Cloudflare Worker](https://workers.cloudflare.com).
 2. Fork / clone this repo
-3. Update the missing values in [wrangler.toml](./wrangler.toml)
+3. (Optional) Update [wrangler.toml](./wrangler.toml) with custom configuration
 4. `npm install`
 5. `npm run dev` to test locally
 6. `npm run deploy` to deploy to cloudflare workers 💪
@@ -27,19 +27,11 @@
 
 ```yaml
 name = "cf-image-proxy"
-type = "javascript"
-webpack_config = "webpack.config.js"
-account_id = "TODO"
-workers_dev = true
-
-[env.production]
-zone_id = "TODO"
-route = "TODO"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
 ```
 
-You can find your `account_id` and `zone_id` in your Cloudflare Workers settings.
-
-Your `route` should look like `"exampledomain.com/*"`.
+After deployment, you can optionally bind a custom domain in the Cloudflare dashboard.
 
 ### Cloudflare Polish
 
@@ -89,10 +81,17 @@ export const mapImageUrl = (imageUrl: string) => {
 A few notes about the implementation:
 
 - It is hosted via Cloudflare (CF) edge [workers](https://workers.cloudflare.com).
-- It is transpiled by webpack before uploading to CF.
 - CF runs our worker via V8 directly in an environment mimicking [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
 - This means that our worker does not have access to Node.js primitives such as `fs`, `dns` and `http`.
 - It does have access to a custom [web fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+
+## Changelog
+
+### 2026-06-27
+- Upgraded to Wrangler v3+
+- Removed webpack dependency (Wrangler v3+ has built-in bundling)
+- Simplified wrangler.toml configuration
+- Fixed deployment issues with modern Node.js versions
 
 ## TODO
 
